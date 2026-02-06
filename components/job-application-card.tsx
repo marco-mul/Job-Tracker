@@ -2,7 +2,13 @@
 
 import { Column, JobApplication } from "@/lib/models/models.types";
 import { Card, CardContent } from "./ui/card";
-import { Edit2, ExternalLink, MoreVertical, Plus, Trash2 } from "lucide-react";
+import {
+  Edit2,
+  ExternalLink,
+  MoreVertical,
+  Trash2,
+  View,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,12 +27,12 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "./ui/dialog";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { useState } from "react";
+
 
 interface JobApplicationCardProps {
   job: JobApplication;
@@ -40,6 +46,7 @@ export default function JobApplicationCard({
   dragHandleProps,
 }: JobApplicationCardProps) {
   const [isEditing, setIsEditing] = useState(false);
+  const [isViewing, setIsViewing] = useState(false);
   const [formData, setFormData] = useState({
     company: job.company,
     position: job.position,
@@ -112,7 +119,6 @@ export default function JobApplicationCard({
               {job.description && (
                 <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
                   {job.description}
-                  {job.columnId}
                 </p>
               )}
               {job.tags && job.tags.length > 0 && (
@@ -145,6 +151,10 @@ export default function JobApplicationCard({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={() => setIsViewing(true)}>
+                    <View className="mr-2 h-4 w-4" />
+                    View
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsEditing(true)}>
                     <Edit2 className="mr-2 h-4 w-4" />
                     Edit
@@ -176,7 +186,91 @@ export default function JobApplicationCard({
           </div>
         </CardContent>
       </Card>
+      {/* Dialog to view the job application */}
+      <Dialog open={isViewing} onOpenChange={setIsViewing}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="font-bold text-3xl mb-4">
+              {job.position}
+            </DialogTitle>
+          </DialogHeader>
+          <form className="space-y-4" onSubmit={handleUpdate}>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <p className="font-bold text-xl">Company:</p>
+                  <p>{job.company}</p>
+                </div>
+                <div className="space-y-2">
+                  <p className="font-bold text-xl">Location: </p>
+                  {job.location ? <p>{job.location}</p> : "N/A"}
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <p className="font-bold text-xl">Salary:</p>
+                  {job.salary ? <p>{job.salary}</p> : "N/A"}
+                </div>
+                <div className="space-y-2">
+                  <p className="font-bold text-xl">Job URL:</p>
+                  {job.jobUrl ? (
+                    <a
+                      target="_blank"
+                      href={job.jobUrl}
+                      onClick={(e) => e.stopPropagation}
+                    >
+                      {job.jobUrl}
+                      <ExternalLink className="h-3 w-3" />
+                    </a>
+                  ) : (
+                    "N/A"
+                  )}
+                </div>
+              </div>
 
+              <div className="space-y-2">
+                <p className="font-bold text-xl">Tags:</p>
+                {job.tags && job.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mb-2">
+                    {job.tags.map((tag, key) => (
+                      <span
+                        key={key}
+                        className="px-2 py-0.5 text-xs rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div className="space-y-2">
+                <p className="font-bold text-xl">
+                  Job description:
+                </p>
+                {job.description ? <p>{job.description}</p> : "..."}
+              </div>
+              <div className="space-y-2">
+                <p className="font-bold text-xl">Notes:</p>
+                {job.notes ? <p>{job.notes}</p> : "..."}
+              </div>
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsViewing(false)}
+              >
+                Close
+              </Button>
+              <Button type="button" onClick={() => setIsEditing(true)}>
+                Edit
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog to edit the job application */}
       <Dialog open={isEditing} onOpenChange={setIsEditing}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
