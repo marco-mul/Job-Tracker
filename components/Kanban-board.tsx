@@ -98,7 +98,7 @@ function DroppableColumn({
     column.jobApplications?.sort((a, b) => a.order - b.order) || [];
 
   return (
-    <Card className="min-w-[300px] flex-shrink-1 shadow-md p-0">
+    <Card className="min-w-[400px] flex-shrink-1 shadow-md p-0">
       <CardHeader
         className={`${config.color} text-white rounded-t-lg pb-3 pt-3`}
       >
