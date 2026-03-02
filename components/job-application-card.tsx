@@ -140,7 +140,7 @@ export default function JobApplicationCard({
                 </p>
               )}
               {job.notes && (
-                <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                <p className="text-xs text-muted-foreground mb-2 line-clamp-4">
                   {job.notes}
                 </p>
               )}
