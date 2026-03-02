@@ -243,8 +243,8 @@ export async function updateJobApplication(
     updatesToApply.order = newOrderValue;
   }
 
-  //we update the job with the updatedToApply object
-  // by using new: true, the updated mongo doc is returned and saved to updated const
+  //we update the job with the updatesToApply object
+  // by using new: true, the updated mongo doc is returned and saved to the "updated" const
   const updated = await JobApplication.findByIdAndUpdate(id, updatesToApply, {
     new: true,
   });

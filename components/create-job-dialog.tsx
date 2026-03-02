@@ -64,7 +64,7 @@ export default function CreateJobApplicationDialog({ columnId, boardId }: Create
                     Add Job
                 </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-2xl">
+            <DialogContent className="sm:max-w-5xl">
                 <DialogHeader>
                     <DialogTitle>Add Job Application</DialogTitle>
                     <DialogDescription>Track a new job application</DialogDescription>

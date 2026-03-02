@@ -2,13 +2,7 @@
 
 import { Column, JobApplication } from "@/lib/models/models.types";
 import { Card, CardContent } from "./ui/card";
-import {
-  Edit2,
-  ExternalLink,
-  MoreVertical,
-  Trash2,
-  View,
-} from "lucide-react";
+import { Edit2, ExternalLink, MoreVertical, Trash2, View } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,7 +26,6 @@ import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { useState } from "react";
-
 
 interface JobApplicationCardProps {
   job: JobApplication;
@@ -83,7 +76,7 @@ export default function JobApplicationCard({
       const result = await deleteJobApplication(job._id);
 
       if (result.error) {
-        console.log("Failed to delete jop application: ", result.error);
+        console.log("Failed to delete job application: ", result.error);
       }
     } catch (error) {
       console.error("Failed to delete job application: ", error);
@@ -112,13 +105,43 @@ export default function JobApplicationCard({
         <CardContent className="p-4">
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-sm mb-1">{job.position}</h3>
-              <p className="text-xs text-muted-foreground mb-2">
-                {job.company}
-              </p>
-              {job.description && (
+              
+              <div className="flex justify-between items-center gap-1">
+                <div>
+                  <h3 className="font-semibold text-sm mb-1">{job.position}</h3>
+                </div>
+                <div>
+                  {job.jobUrl && (
+                <a
+                  target="_blank"
+                  href={job.jobUrl}
+                  onClick={(e) => e.stopPropagation}
+                >
+                  <ExternalLink className="h-4 w-4" />
+                </a>
+              )}
+                </div>
+              </div>
+              <div className="flex justify-between items-center gap-1">
+                <div>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {job.company}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground mb-2">
+                    {job.salary ? job.salary : ""}
+                  </p>
+                </div>
+              </div>
+              {job.location && (
                 <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
-                  {job.description}
+                  {job.location}
+                </p>
+              )}
+              {job.notes && (
+                <p className="text-xs text-muted-foreground mb-2 line-clamp-2">
+                  {job.notes}
                 </p>
               )}
               {job.tags && job.tags.length > 0 && (
@@ -133,15 +156,7 @@ export default function JobApplicationCard({
                   ))}
                 </div>
               )}
-              {job.jobUrl && (
-                <a
-                  target="_blank"
-                  href={job.jobUrl}
-                  onClick={(e) => e.stopPropagation}
-                >
-                  <ExternalLink className="h-3 w-3" />
-                </a>
-              )}
+              
             </div>
             <div className="flex items-start gap-1">
               <DropdownMenu>
@@ -188,7 +203,7 @@ export default function JobApplicationCard({
       </Card>
       {/* Dialog to view the job application */}
       <Dialog open={isViewing} onOpenChange={setIsViewing}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="sm:max-w-5xl">
           <DialogHeader>
             <DialogTitle className="font-bold text-3xl mb-4">
               {job.position}
@@ -214,7 +229,7 @@ export default function JobApplicationCard({
                 <div className="space-y-2">
                   <p className="font-bold text-xl">Job URL:</p>
                   {job.jobUrl ? (
-                    <a
+                    <a className="text-sm"
                       target="_blank"
                       href={job.jobUrl}
                       onClick={(e) => e.stopPropagation}
@@ -244,9 +259,7 @@ export default function JobApplicationCard({
                 )}
               </div>
               <div className="space-y-2">
-                <p className="font-bold text-xl">
-                  Job description:
-                </p>
+                <p className="font-bold text-xl">Job description:</p>
                 {job.description ? <p>{job.description}</p> : "..."}
               </div>
               <div className="space-y-2">
@@ -272,7 +285,7 @@ export default function JobApplicationCard({
 
       {/* Dialog to edit the job application */}
       <Dialog open={isEditing} onOpenChange={setIsEditing}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="sm:max-w-5xl">
           <DialogHeader>
             <DialogTitle>Update Job Application</DialogTitle>
             <DialogDescription>
